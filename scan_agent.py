@@ -6,7 +6,7 @@ scores each ticker's net lean (bullish vs bearish).
 
 Outputs on each run:
   • scan_reports/scan_YYYY-MM-DD.md   — dated markdown report
-  • dashboard.html                    — minimalist live dashboard (overwritten each run)
+  • index.html                        — minimalist live dashboard (overwritten each run)
 
 Usage:
     python scan_agent.py
@@ -474,7 +474,7 @@ def main():
         f.write(report)
 
     # ── Save / overwrite dashboard ──
-    dash_path = os.path.join(script_dir, "dashboard.html")
+    dash_path = os.path.join(script_dir, "index.html")
     with open(dash_path, "w") as f:
         f.write(dashboard)
 
