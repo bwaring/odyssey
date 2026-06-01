@@ -3,7 +3,7 @@ name: Odyssey Daily Scan
 
 on:
   schedule:
-    # 7am ET = 12:00 UTC (EST) / 11:00 UTC (EDT)
+    # 7am ET = 12:00 UTC (EST) / 11:00 UTC (EDT) suggested time
     # Using 12:00 UTC to hit 7am EST in winter; in summer (EDT) this runs at 8am.
     # Swap to 11:00 if you want strict 7am EDT during summer months.
     - cron: '0 12 * * 1-5'   # Mon–Fri only (market days)
