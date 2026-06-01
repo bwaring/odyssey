@@ -1,1 +1,40 @@
 
+name: Odyssey Daily Scan
+
+on:
+  schedule:
+    # 7am ET = 12:00 UTC (EST) / 11:00 UTC (EDT)
+    # Using 12:00 UTC to hit 7am EST in winter; in summer (EDT) this runs at 8am.
+    # Swap to 11:00 if you want strict 7am EDT during summer months.
+    - cron: '0 12 * * 1-5'   # Mon–Fri only (market days)
+  workflow_dispatch:           # also lets you trigger manually from GitHub UI
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write          # needed to commit dashboard.html back to repo
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install pandas
+
+      - name: Run scan agent
+        run: python scan_agent.py
+
+      - name: Commit updated dashboard
+        run: |
+          git config user.name  "Odyssey Bot"
+          git config user.email "odyssey-bot@users.noreply.github.com"
+          git add dashboard.html manifest.json scan_reports/
+          git diff --cached --quiet || git commit -m "chore: daily scan $(date -u +'%Y-%m-%d %H:%M UTC')"
+          git push
