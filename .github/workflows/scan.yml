@@ -28,7 +28,7 @@ jobs:
         run: pip install pandas
 
       - name: Run scan agent
-        run: python scan_agent.py
+        run: python scout_agent.py
 
       - name: Commit updated dashboard
         run: |
