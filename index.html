@@ -2,7 +2,7 @@
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Odyssey</title>
-<meta name="theme-color" content="#0f1115">
+<meta name="theme-color" content="#0a0d0c">
 <link rel="icon" type="image/png" href="favicon.png">
 <link rel="icon" type="image/svg+xml" href="icon.svg">
 <link rel="apple-touch-icon" href="icon-180.png">
@@ -13,92 +13,207 @@
 <meta name="apple-mobile-web-app-title" content="Odyssey">
 <style>
   :root {
-    --bg:#0f1115; --panel:#171a21; --line:#262b36; --text:#e6e9ef;
-    --muted:#8a93a3; --bull:#2ecc71; --bear:#ff5c5c; --mixed:#e0b341;
+    --bg:#0a0d0c; --bg-alt:#0e1311; --panel:#111614; --border:#1d2522;
+    --text:#e8ece9; --muted:#7c8985; --green:#34d399; --green-soft:rgba(52,211,153,.14);
+    --red:#f87171; --red-soft:rgba(248,113,113,.14); --yellow:#fbbf24; --yellow-soft:rgba(251,191,36,.14);
+    --blue:#60a5fa;
   }
   * { box-sizing:border-box; }
   body { margin:0; background:var(--bg); color:var(--text);
     font:15px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; }
-  .wrap { max-width:1040px; margin:0 auto; padding:32px 24px 64px; }
-  h1 { font-size:22px; font-weight:650; margin:0 0 2px; letter-spacing:.2px; }
-  .ts { color:var(--muted); font-size:13px; margin-bottom:24px; }
-  .summary { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:28px; }
-  .stat { background:var(--panel); border:1px solid var(--line); border-radius:10px;
-    padding:12px 16px; min-width:96px; }
-  .stat .n { font-size:22px; font-weight:650; }
-  .stat .l { color:var(--muted); font-size:12px; text-transform:uppercase; letter-spacing:.5px; }
-  .stat.bull .n { color:var(--bull); } .stat.bear .n { color:var(--bear); }
-  h2.theme { font-size:14px; font-weight:600; color:var(--muted); text-transform:uppercase;
-    letter-spacing:.6px; margin:28px 0 10px; }
-  table { width:100%; border-collapse:collapse; background:var(--panel);
-    border:1px solid var(--line); border-radius:10px; overflow:hidden; }
-  th { text-align:left; font-size:11px; text-transform:uppercase; letter-spacing:.5px;
-    color:var(--muted); font-weight:600; padding:10px 12px; border-bottom:1px solid var(--line); }
-  td { padding:11px 12px; border-bottom:1px solid var(--line); font-size:14px; }
-  tr:last-child td { border-bottom:none; }
-  .num { text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
-  th:nth-child(n+2):nth-child(-n+7) { text-align:right; }
-  .tkr { font-weight:650; }
-  .star { color:var(--mixed); }
-  .up { color:var(--bull); } .down { color:var(--bear); }
-  .hot { color:var(--bear); font-weight:600; } .cold { color:#5aa9ff; font-weight:600; }
-  .flags { color:var(--muted); font-size:12px; }
-  .row { border-left:3px solid transparent; }
-  .row.bull { border-left-color:var(--bull); }
-  .row.bull-lean { border-left-color:rgba(46,204,113,.5); }
-  .row.bear { border-left-color:var(--bear); }
-  .row.bear-lean { border-left-color:rgba(255,92,92,.5); }
-  .row.mixed { border-left-color:var(--mixed); }
-  .pill { display:inline-block; padding:2px 9px; border-radius:20px; font-size:12px;
-    font-weight:600; white-space:nowrap; }
-  .pill.bull { background:rgba(46,204,113,.15); color:var(--bull); }
-  .pill.bull-lean { background:rgba(46,204,113,.1); color:var(--bull); }
-  .pill.bear { background:rgba(255,92,92,.15); color:var(--bear); }
-  .pill.bear-lean { background:rgba(255,92,92,.1); color:var(--bear); }
-  .pill.mixed { background:rgba(224,179,65,.15); color:var(--mixed); }
-  .pill.quiet { background:#20242d; color:var(--muted); }
-  .legend { color:var(--muted); font-size:12px; margin:20px 0 0; }
-  .legend b.bull { color:var(--bull); } .legend b.bear { color:var(--bear); }
-  .legend b.mixed { color:var(--mixed); }
-  footer { color:var(--muted); font-size:12px; margin-top:32px; border-top:1px solid var(--line); padding-top:16px; }
+  .wrap { max-width:1200px; margin:0 auto; padding:32px 20px 64px; }
+  h1 { font-size:21px; font-weight:700; margin:0; letter-spacing:.2px; }
+  h1 span { color:var(--green); }
+  .ts { color:var(--muted); font-size:13px; margin:2px 0 22px; }
+  .summary { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:20px; }
+  .stat { background:var(--panel); border:1px solid var(--border); border-radius:12px;
+    padding:12px 18px; min-width:90px; flex:0 1 auto; }
+  .stat .n { font-size:22px; font-weight:700; font-variant-numeric:tabular-nums; }
+  .stat .l { color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:.5px; margin-top:2px; }
+  .stat.flagged .n { color:var(--green); }
+  .stat.bull .n { color:var(--green); } .stat.bear .n { color:var(--red); }
+  .controls { display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:22px; }
+  .filter-group { display:flex; gap:3px; background:var(--panel); border:1px solid var(--border);
+    border-radius:10px; padding:4px; }
+  .filter-btn { padding:7px 13px; border-radius:7px; font-size:12.5px; font-weight:600;
+    color:var(--muted); background:transparent; border:none; cursor:pointer; white-space:nowrap; }
+  .filter-btn.active { background:var(--green-soft); color:var(--green); }
+  select { background:var(--panel); border:1px solid var(--border); color:var(--text);
+    border-radius:9px; padding:8px 12px; font-size:12.5px; font-weight:600; cursor:pointer; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:14px; }
+  .card { background:var(--panel); border:1px solid var(--border); border-left:3px solid var(--border);
+    border-radius:14px; padding:16px; transition:border-color .15s, transform .15s; }
+  .card:hover { transform:translateY(-2px); }
+  .card.bull, .card.bull-lean { border-left-color:var(--green); }
+  .card.bear, .card.bear-lean { border-left-color:var(--red); }
+  .card.mixed { border-left-color:var(--yellow); }
+  .card-head { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px; }
+  .tkr { font-size:18px; font-weight:700; letter-spacing:.2px; }
+  .star { color:var(--green); margin-left:4px; font-size:14px; }
+  .theme-tag { font-size:10.5px; color:var(--muted); text-transform:uppercase;
+    letter-spacing:.4px; margin-top:3px; }
+  .pill { display:inline-block; padding:3px 10px; border-radius:20px; font-size:11.5px;
+    font-weight:700; white-space:nowrap; }
+  .pill.bull { background:var(--green-soft); color:var(--green); }
+  .pill.bull-lean { background:rgba(52,211,153,.08); color:var(--green); }
+  .pill.bear { background:var(--red-soft); color:var(--red); }
+  .pill.bear-lean { background:rgba(248,113,113,.08); color:var(--red); }
+  .pill.mixed { background:var(--yellow-soft); color:var(--yellow); }
+  .pill.quiet { background:var(--bg-alt); color:var(--muted); }
+  .price-row { display:flex; align-items:baseline; gap:9px; margin-bottom:12px; }
+  .price { font-size:21px; font-weight:700; font-variant-numeric:tabular-nums; }
+  .pct { font-size:13px; font-weight:700; }
+  .pct.up { color:var(--green); } .pct.down { color:var(--red); } .pct.flat { color:var(--muted); }
+  .stats-row { display:grid; grid-template-columns:repeat(3,1fr); gap:6px; padding:10px 0;
+    border-top:1px solid var(--border); }
+  .stats-row + .stats-row { border-top:none; padding-top:0; }
+  .stat-mini { text-align:center; }
+  .stat-mini .v { font-size:13px; font-weight:700; font-variant-numeric:tabular-nums; }
+  .stat-mini .v.hot { color:var(--red); } .stat-mini .v.cold { color:var(--blue); }
+  .stat-mini .k { font-size:9.5px; color:var(--muted); text-transform:uppercase;
+    letter-spacing:.4px; margin-top:2px; }
+  .flags { display:flex; flex-wrap:wrap; gap:6px; margin-top:12px; }
+  .flag-tag { font-size:11px; color:var(--muted); background:var(--bg-alt);
+    border:1px solid var(--border); padding:3px 9px; border-radius:7px; }
+  .empty { color:var(--muted); padding:40px 0; text-align:center; font-size:14px; grid-column:1/-1; }
+  .legend { color:var(--muted); font-size:12px; margin:24px 0 0; }
+  .legend b.bull { color:var(--green); } .legend b.bear { color:var(--red); } .legend b.mixed { color:var(--yellow); }
+  footer { color:var(--muted); font-size:12px; margin-top:32px; border-top:1px solid var(--border); padding-top:16px; }
+  @media (max-width:480px) {
+    .wrap { padding:20px 14px 48px; }
+    .stat { flex:1 1 40%; }
+    .filter-btn { padding:7px 10px; font-size:12px; }
+  }
 </style></head>
 <body><div class="wrap">
-  <h1>Odyssey — Scan Dashboard</h1>
-  <div class="ts">Thursday, June 18, 2026 · 03:17 PM</div>
+  <header><h1>Odyssey <span>·</span> Scout Dashboard</h1></header>
+  <div class="ts">Friday, June 19, 2026 · 01:29 AM</div>
   <div class="summary">
     <div class="stat"><div class="n">20</div><div class="l">Scanned</div></div>
-    <div class="stat"><div class="n">17</div><div class="l">Flagged</div></div>
-    <div class="stat bull"><div class="n">17</div><div class="l">Bullish lean</div></div>
+    <div class="stat flagged"><div class="n">18</div><div class="l">Flagged</div></div>
+    <div class="stat bull"><div class="n">18</div><div class="l">Bullish lean</div></div>
     <div class="stat bear"><div class="n">0</div><div class="l">Bearish lean</div></div>
   </div>
-  <h2 class="theme">AI Memory & Chip Supply Chain</h2>
-<table><thead><tr><th>Ticker</th><th>Price</th><th>1d</th><th>5d</th><th>20d</th><th>Vol/Avg</th><th>RSI</th><th>Signal</th><th>Flags</th></tr></thead><tbody>
-<tr class="row bull"><td class="tkr">MU <span class="star">★</span></td><td class="num">$1,127.04</td><td class="num up">▲ 8.0%</td><td class="num up">▲ 13.2%</td><td class="num up">▲ 54.0%</td><td class="num">0.4x</td><td class="num ">59.0</td><td><span class="pill bull">BULLISH</span></td><td class="flags">Up 8.0% today · Near 52w high (0.0%)</td></tr>
-<tr class="row bull-lean"><td class="tkr">NVDA</td><td class="num">$209.36</td><td class="num up">▲ 2.3%</td><td class="num up">▲ 2.2%</td><td class="num down">▼ 6.3%</td><td class="num">0.4x</td><td class="num ">48.8</td><td><span class="pill bull-lean">Lean Bull</span></td><td class="flags">Up 2.3% today</td></tr>
-<tr class="row bull"><td class="tkr">AMD</td><td class="num">$536.00</td><td class="num up">▲ 4.6%</td><td class="num up">▲ 9.7%</td><td class="num up">▲ 19.8%</td><td class="num">0.4x</td><td class="num ">52.9</td><td><span class="pill bull">BULLISH</span></td><td class="flags">Up 4.6% today · Near 52w high (-2.1%)</td></tr>
-<tr class="row bull-lean"><td class="tkr">AMAT</td><td class="num">$632.14</td><td class="num up">▲ 6.6%</td><td class="num up">▲ 14.4%</td><td class="num up">▲ 48.1%</td><td class="num">0.5x</td><td class="num hot">78.5</td><td><span class="pill bull-lean">Lean Bull</span></td><td class="flags">Up 6.6% today · RSI overbought (78.5) · Near 52w high (0.0%)</td></tr>
-<tr class="row bull"><td class="tkr">LRCX</td><td class="num">$394.52</td><td class="num up">▲ 5.4%</td><td class="num up">▲ 8.8%</td><td class="num up">▲ 35.1%</td><td class="num">0.4x</td><td class="num ">68.2</td><td><span class="pill bull">BULLISH</span></td><td class="flags">Up 5.4% today · Near 52w high (0.0%)</td></tr>
-<tr class="row bull-lean"><td class="tkr">KLAC</td><td class="num">$254.50</td><td class="num up">▲ 6.6%</td><td class="num up">▲ 5.5%</td><td class="num up">▲ 39.1%</td><td class="num">0.3x</td><td class="num hot">72.0</td><td><span class="pill bull-lean">Lean Bull</span></td><td class="flags">Up 6.6% today · RSI overbought (72.0) · Near 52w high (-0.7%)</td></tr>
-<tr class="row bull"><td class="tkr">ASML</td><td class="num">$1,936.27</td><td class="num up">▲ 3.7%</td><td class="num up">▲ 1.9%</td><td class="num up">▲ 24.9%</td><td class="num">0.4x</td><td class="num ">68.1</td><td><span class="pill bull">BULLISH</span></td><td class="flags">Up 3.7% today · Near 52w high (0.0%)</td></tr>
-<tr class="row bull"><td class="tkr">TSM</td><td class="num">$453.07</td><td class="num up">▲ 4.8%</td><td class="num up">▲ 7.6%</td><td class="num up">▲ 12.8%</td><td class="num">0.4x</td><td class="num ">59.4</td><td><span class="pill bull">BULLISH</span></td><td class="flags">Up 4.8% today · Near 52w high (0.0%)</td></tr>
-<tr class="row bull"><td class="tkr">MRVL</td><td class="num">$324.35</td><td class="num up">▲ 12.0%</td><td class="num up">▲ 15.5%</td><td class="num up">▲ 73.6%</td><td class="num">0.5x</td><td class="num ">66.6</td><td><span class="pill bull">BULLISH</span></td><td class="flags">Up 12.0% today · Near 52w high (0.0%)</td></tr>
-<tr class="row bull-lean"><td class="tkr">ON</td><td class="num">$120.39</td><td class="num up">▲ 6.6%</td><td class="num up">▲ 3.8%</td><td class="num up">▲ 9.2%</td><td class="num">0.3x</td><td class="num ">49.9</td><td><span class="pill bull-lean">Lean Bull</span></td><td class="flags">Up 6.6% today</td></tr>
-<tr class="row bull"><td class="tkr">SMCI</td><td class="num">$30.11</td><td class="num up">▲ 8.4%</td><td class="num down">▼ 5.8%</td><td class="num down">▼ 10.0%</td><td class="num">0.4x</td><td class="num cold">29.9</td><td><span class="pill bull">BULLISH</span></td><td class="flags">Up 8.4% today · RSI oversold (29.9)</td></tr>
-<tr class="row bull"><td class="tkr">ARM</td><td class="num">$445.44</td><td class="num up">▲ 6.3%</td><td class="num up">▲ 30.2%</td><td class="num up">▲ 73.5%</td><td class="num">0.3x</td><td class="num ">63.1</td><td><span class="pill bull">BULLISH</span></td><td class="flags">Up 6.3% today · Near 52w high (0.0%)</td></tr>
-</tbody></table>
-<h2 class="theme">Clean Energy & Solar</h2>
-<table><thead><tr><th>Ticker</th><th>Price</th><th>1d</th><th>5d</th><th>20d</th><th>Vol/Avg</th><th>RSI</th><th>Signal</th><th>Flags</th></tr></thead><tbody>
-<tr class="row bull"><td class="tkr">TAN</td><td class="num">$59.89</td><td class="num up">▲ 2.5%</td><td class="num down">▼ 3.9%</td><td class="num down">▼ 4.8%</td><td class="num">0.2x</td><td class="num cold">24.2</td><td><span class="pill bull">BULLISH</span></td><td class="flags">Up 2.5% today · RSI oversold (24.2)</td></tr>
-<tr class="row bull-lean"><td class="tkr">ENPH</td><td class="num">$51.48</td><td class="num up">▲ 7.7%</td><td class="num down">▼ 6.3%</td><td class="num down">▼ 3.1%</td><td class="num">0.5x</td><td class="num ">33.7</td><td><span class="pill bull-lean">Lean Bull</span></td><td class="flags">Up 7.7% today</td></tr>
-<tr class="row quiet"><td class="tkr">FSLR</td><td class="num">$255.59</td><td class="num up">▲ 0.3%</td><td class="num down">▼ 5.8%</td><td class="num up">▲ 7.5%</td><td class="num">0.3x</td><td class="num ">31.6</td><td><span class="pill quiet">QUIET</span></td><td class="flags">—</td></tr>
-<tr class="row bull-lean"><td class="tkr">SEDG</td><td class="num">$55.75</td><td class="num up">▲ 2.0%</td><td class="num down">▼ 4.6%</td><td class="num down">▼ 0.8%</td><td class="num">0.4x</td><td class="num cold">25.6</td><td><span class="pill bull-lean">Lean Bull</span></td><td class="flags">RSI oversold (25.6)</td></tr>
-<tr class="row quiet"><td class="tkr">NEE</td><td class="num">$87.09</td><td class="num up">▲ 1.6%</td><td class="num up">▲ 2.6%</td><td class="num down">▼ 1.3%</td><td class="num">0.4x</td><td class="num ">50.3</td><td><span class="pill quiet">QUIET</span></td><td class="flags">—</td></tr>
-<tr class="row bull"><td class="tkr">PLUG</td><td class="num">$2.75</td><td class="num up">▲ 3.8%</td><td class="num down">▼ 2.8%</td><td class="num down">▼ 16.9%</td><td class="num">0.3x</td><td class="num cold">16.3</td><td><span class="pill bull">BULLISH</span></td><td class="flags">Up 3.8% today · RSI oversold (16.3)</td></tr>
-<tr class="row bull"><td class="tkr">RUN</td><td class="num">$13.10</td><td class="num up">▲ 5.3%</td><td class="num up">▲ 4.3%</td><td class="num down">▼ 4.3%</td><td class="num">0.3x</td><td class="num cold">25.7</td><td><span class="pill bull">BULLISH</span></td><td class="flags">Up 5.3% today · RSI oversold (25.7)</td></tr>
-<tr class="row quiet"><td class="tkr">CSIQ</td><td class="num">$16.20</td><td class="num up">▲ 1.2%</td><td class="num up">▲ 2.8%</td><td class="num down">▼ 2.8%</td><td class="num">0.2x</td><td class="num ">37.3</td><td><span class="pill quiet">QUIET</span></td><td class="flags">—</td></tr>
-</tbody></table>
+  <div class="controls">
+    <div class="filter-group" id="tierFilters">
+      <button class="filter-btn active" data-tier="all">All</button>
+      <button class="filter-btn" data-tier="bull">Bullish</button>
+      <button class="filter-btn" data-tier="bear">Bearish</button>
+      <button class="filter-btn" data-tier="mixed">Mixed</button>
+      <button class="filter-btn" data-tier="quiet">Quiet</button>
+    </div>
+    <select id="themeFilter"><option value="all">All themes</option></select>
+    <select id="sortBy">
+      <option value="net">Sort: Signal strength</option>
+      <option value="ticker">Sort: Ticker A–Z</option>
+      <option value="pct1d">Sort: 1-day move</option>
+      <option value="rsi">Sort: RSI</option>
+      <option value="price">Sort: Price</option>
+    </select>
+  </div>
+  <div class="grid" id="grid"></div>
   <p class="legend"><b class="bull">● Green</b> = bullish lean (momentum, near highs, golden cross, oversold bounce) ·
     <b class="bear">● Red</b> = bearish lean (overbought/toppy, selling off, death cross, near lows) ·
     <b class="mixed">● Yellow</b> = mixed · ● Grey = quiet. ★ = north star (MU).</p>
-  <footer>Generated by Odyssey Scan Agent. Not financial advice — signals only. You make the calls.</footer>
-</div></body></html>
+  <footer>Generated by Odyssey Scout. Not financial advice — signals only. You make the calls.</footer>
+</div>
+<script>
+  const DATA = [{"ticker": "MU", "theme": "AI Memory & Chip Supply Chain", "price": 1133.99, "pct1d": 8.7, "pct5d": 13.87, "pct20d": 54.92, "vol_ratio": 1.15, "rsi": 59.3, "pct_from_high": 0.0, "pct_from_low": 326.44, "flags": ["Up 8.7% today", "Near 52w high (0.0%)"], "net": 2, "signal_count": 2, "tier_label": "BULLISH", "tier_class": "bull", "is_north_star": true}, {"ticker": "NVDA", "theme": "AI Memory & Chip Supply Chain", "price": 210.69, "pct1d": 2.95, "pct5d": 2.84, "pct20d": -5.72, "vol_ratio": 1.38, "rsi": 49.7, "pct_from_high": -10.63, "pct_from_low": 27.56, "flags": ["Up 3.0% today"], "net": 1, "signal_count": 1, "tier_label": "Lean Bull", "tier_class": "bull-lean", "is_north_star": false}, {"ticker": "AMD", "theme": "AI Memory & Chip Supply Chain", "price": 537.37, "pct1d": 4.86, "pct5d": 10.02, "pct20d": 20.06, "vol_ratio": 1.36, "rsi": 53.1, "pct_from_high": -1.81, "pct_from_low": 181.42, "flags": ["Up 4.9% today", "Near 52w high (-1.8%)"], "net": 2, "signal_count": 2, "tier_label": "BULLISH", "tier_class": "bull", "is_north_star": false}, {"ticker": "AMAT", "theme": "AI Memory & Chip Supply Chain", "price": 617.11, "pct1d": 4.08, "pct5d": 11.67, "pct20d": 44.57, "vol_ratio": 1.9, "rsi": 77.5, "pct_from_high": 0.0, "pct_from_low": 140.67, "flags": ["Vol spike 1.9x avg", "Up 4.1% today", "RSI overbought (77.5)", "Near 52w high (0.0%)"], "net": 2, "signal_count": 4, "tier_label": "BULLISH", "tier_class": "bull", "is_north_star": false}, {"ticker": "LRCX", "theme": "AI Memory & Chip Supply Chain", "price": 389.04, "pct1d": 3.97, "pct5d": 7.32, "pct20d": 33.19, "vol_ratio": 1.97, "rsi": 67.4, "pct_from_high": 0.0, "pct_from_low": 127.27, "flags": ["Vol spike 2.0x avg", "Up 4.0% today", "Near 52w high (0.0%)"], "net": 3, "signal_count": 3, "tier_label": "BULLISH", "tier_class": "bull", "is_north_star": false}, {"ticker": "KLAC", "theme": "AI Memory & Chip Supply Chain", "price": 259.56, "pct1d": 8.73, "pct5d": 7.63, "pct20d": 41.88, "vol_ratio": 1.93, "rsi": 73.0, "pct_from_high": 0.0, "pct_from_low": 113.62, "flags": ["Vol spike 1.9x avg", "Up 8.7% today", "RSI overbought (73.0)", "Near 52w high (0.0%)"], "net": 2, "signal_count": 4, "tier_label": "BULLISH", "tier_class": "bull", "is_north_star": false}, {"ticker": "ASML", "theme": "AI Memory & Chip Supply Chain", "price": 1929.68, "pct1d": 3.31, "pct5d": 1.59, "pct20d": 24.49, "vol_ratio": 1.22, "rsi": 67.9, "pct_from_high": 0.0, "pct_from_low": 82.73, "flags": ["Up 3.3% today", "Near 52w high (0.0%)"], "net": 2, "signal_count": 2, "tier_label": "BULLISH", "tier_class": "bull", "is_north_star": false}, {"ticker": "TSM", "theme": "AI Memory & Chip Supply Chain", "price": 462.12, "pct1d": 6.94, "pct5d": 9.75, "pct20d": 15.06, "vol_ratio": 1.33, "rsi": 61.3, "pct_from_high": 0.0, "pct_from_low": 59.93, "flags": ["Up 6.9% today", "Near 52w high (0.0%)"], "net": 2, "signal_count": 2, "tier_label": "BULLISH", "tier_class": "bull", "is_north_star": false}, {"ticker": "MRVL", "theme": "AI Memory & Chip Supply Chain", "price": 310.58, "pct1d": 7.27, "pct5d": 10.64, "pct20d": 66.26, "vol_ratio": 4.19, "rsi": 65.2, "pct_from_high": -1.85, "pct_from_low": 321.24, "flags": ["Vol spike 4.2x avg", "Up 7.3% today", "Near 52w high (-1.8%)"], "net": 3, "signal_count": 3, "tier_label": "BULLISH", "tier_class": "bull", "is_north_star": false}, {"ticker": "ON", "theme": "AI Memory & Chip Supply Chain", "price": 121.62, "pct1d": 7.7, "pct5d": 4.88, "pct20d": 10.35, "vol_ratio": 1.51, "rsi": 50.6, "pct_from_high": -9.19, "pct_from_low": 125.14, "flags": ["Vol spike 1.5x avg", "Up 7.7% today"], "net": 2, "signal_count": 2, "tier_label": "BULLISH", "tier_class": "bull", "is_north_star": false}, {"ticker": "SMCI", "theme": "AI Memory & Chip Supply Chain", "price": 30.66, "pct1d": 10.37, "pct5d": -4.1, "pct20d": -8.37, "vol_ratio": 0.99, "rsi": 30.8, "pct_from_high": -38.89, "pct_from_low": 49.34, "flags": ["Up 10.4% today"], "net": 1, "signal_count": 1, "tier_label": "Lean Bull", "tier_class": "bull-lean", "is_north_star": false}, {"ticker": "ARM", "theme": "AI Memory & Chip Supply Chain", "price": 439.46, "pct1d": 4.91, "pct5d": 28.41, "pct20d": 71.18, "vol_ratio": 2.56, "rsi": 62.4, "pct_from_high": 0.0, "pct_from_low": 320.33, "flags": ["Vol spike 2.6x avg", "Up 4.9% today", "Near 52w high (0.0%)"], "net": 3, "signal_count": 3, "tier_label": "BULLISH", "tier_class": "bull", "is_north_star": false}, {"ticker": "TAN", "theme": "Clean Energy & Solar", "price": 60.58, "pct1d": 3.64, "pct5d": -2.76, "pct20d": -3.72, "vol_ratio": 0.85, "rsi": 26.1, "pct_from_high": -18.06, "pct_from_low": 23.66, "flags": ["Up 3.6% today", "RSI oversold (26.1)"], "net": 2, "signal_count": 2, "tier_label": "BULLISH", "tier_class": "bull", "is_north_star": false}, {"ticker": "ENPH", "theme": "Clean Energy & Solar", "price": 52.28, "pct1d": 9.42, "pct5d": -4.82, "pct20d": -1.64, "vol_ratio": 1.52, "rsi": 34.7, "pct_from_high": -27.72, "pct_from_low": 67.62, "flags": ["Vol spike 1.5x avg", "Up 9.4% today"], "net": 2, "signal_count": 2, "tier_label": "BULLISH", "tier_class": "bull", "is_north_star": false}, {"ticker": "FSLR", "theme": "Clean Energy & Solar", "price": 257.7, "pct1d": 1.14, "pct5d": -4.97, "pct20d": 8.34, "vol_ratio": 1.16, "rsi": 32.7, "pct_from_high": -19.03, "pct_from_low": 39.52, "flags": [], "net": 0, "signal_count": 0, "tier_label": "QUIET", "tier_class": "quiet", "is_north_star": false}, {"ticker": "SEDG", "theme": "Clean Energy & Solar", "price": 58.05, "pct1d": 6.16, "pct5d": -0.67, "pct20d": 3.26, "vol_ratio": 1.15, "rsi": 29.5, "pct_from_high": -26.06, "pct_from_low": 101.21, "flags": ["Up 6.2% today", "RSI oversold (29.5)"], "net": 2, "signal_count": 2, "tier_label": "BULLISH", "tier_class": "bull", "is_north_star": false}, {"ticker": "NEE", "theme": "Clean Energy & Solar", "price": 86.75, "pct1d": 1.19, "pct5d": 2.25, "pct20d": -1.72, "vol_ratio": 1.62, "rsi": 49.1, "pct_from_high": -11.37, "pct_from_low": 10.69, "flags": ["Vol spike 1.6x avg"], "net": 1, "signal_count": 1, "tier_label": "Lean Bull", "tier_class": "bull-lean", "is_north_star": false}, {"ticker": "PLUG", "theme": "Clean Energy & Solar", "price": 2.85, "pct1d": 7.55, "pct5d": 0.71, "pct20d": -13.9, "vol_ratio": 0.94, "rsi": 20.7, "pct_from_high": -31.16, "pct_from_low": 59.22, "flags": ["Up 7.5% today", "RSI oversold (20.7)"], "net": 2, "signal_count": 2, "tier_label": "BULLISH", "tier_class": "bull", "is_north_star": false}, {"ticker": "RUN", "theme": "Clean Energy & Solar", "price": 13.52, "pct1d": 8.68, "pct5d": 7.73, "pct20d": -1.24, "vol_ratio": 1.44, "rsi": 29.7, "pct_from_high": -36.85, "pct_from_low": 19.33, "flags": ["Up 8.7% today", "RSI oversold (29.7)"], "net": 2, "signal_count": 2, "tier_label": "BULLISH", "tier_class": "bull", "is_north_star": false}, {"ticker": "CSIQ", "theme": "Clean Energy & Solar", "price": 16.27, "pct1d": 1.69, "pct5d": 3.24, "pct20d": -2.34, "vol_ratio": 0.85, "rsi": 37.7, "pct_from_high": -40.03, "pct_from_low": 34.35, "flags": [], "net": 0, "signal_count": 0, "tier_label": "QUIET", "tier_class": "quiet", "is_north_star": false}];
+  const THEMES = ["AI Memory & Chip Supply Chain", "Clean Energy & Solar"];
+  const RSI_OB = 70, RSI_OS = 30;
+  const state = { tier: 'all', theme: 'all', sort: 'net' };
+
+  const themeSel = document.getElementById('themeFilter');
+  THEMES.forEach(t => {
+    const o = document.createElement('option');
+    o.value = t; o.textContent = t;
+    themeSel.appendChild(o);
+  });
+
+  function fmtArrowPct(v) {
+    if (v === null || v === undefined) return '—';
+    const arrow = v > 0 ? '▲' : v < 0 ? '▼' : '—';
+    return `${arrow} ${Math.abs(v).toFixed(1)}%`;
+  }
+
+  function fmtPct(v) {
+    if (v === null || v === undefined) return '<span class="pct flat">—</span>';
+    const cls = v > 0 ? 'up' : v < 0 ? 'down' : 'flat';
+    return `<span class="pct ${cls}">${fmtArrowPct(v)}</span>`;
+  }
+
+  function tierGroup(cls) {
+    if (cls === 'bull' || cls === 'bull-lean') return 'bull';
+    if (cls === 'bear' || cls === 'bear-lean') return 'bear';
+    return cls;
+  }
+
+  function cardHtml(c) {
+    const rsiCls = c.rsi >= RSI_OB ? 'hot' : c.rsi <= RSI_OS ? 'cold' : '';
+    const flagsHtml = c.flags.length
+      ? `<div class="flags">${c.flags.map(f => `<span class="flag-tag">${f}</span>`).join('')}</div>`
+      : '';
+    return `<div class="card ${c.tier_class}" data-tier="${tierGroup(c.tier_class)}" data-theme="${c.theme}">
+      <div class="card-head">
+        <div>
+          <div class="tkr">${c.ticker}${c.is_north_star ? '<span class="star">★</span>' : ''}</div>
+          <div class="theme-tag">${c.theme}</div>
+        </div>
+        <span class="pill ${c.tier_class}">${c.tier_label}</span>
+      </div>
+      <div class="price-row">
+        <span class="price">$${c.price.toFixed(2)}</span>
+        ${fmtPct(c.pct1d)}
+      </div>
+      <div class="stats-row">
+        <div class="stat-mini"><div class="v">${fmtArrowPct(c.pct5d)}</div><div class="k">5D</div></div>
+        <div class="stat-mini"><div class="v">${fmtArrowPct(c.pct20d)}</div><div class="k">20D</div></div>
+        <div class="stat-mini"><div class="v ${rsiCls}">${c.rsi}</div><div class="k">RSI</div></div>
+      </div>
+      <div class="stats-row">
+        <div class="stat-mini"><div class="v">${c.vol_ratio.toFixed(1)}x</div><div class="k">Vol/Avg</div></div>
+        <div class="stat-mini"><div class="v">${c.pct_from_high.toFixed(1)}%</div><div class="k">From High</div></div>
+        <div class="stat-mini"><div class="v">+${c.pct_from_low.toFixed(1)}%</div><div class="k">From Low</div></div>
+      </div>
+      ${flagsHtml}
+    </div>`;
+  }
+
+  function sortData(arr) {
+    const s = state.sort;
+    const copy = [...arr];
+    if (s === 'ticker') copy.sort((a, b) => a.ticker.localeCompare(b.ticker));
+    else if (s === 'pct1d') copy.sort((a, b) => (b.pct1d ?? -999) - (a.pct1d ?? -999));
+    else if (s === 'rsi') copy.sort((a, b) => b.rsi - a.rsi);
+    else if (s === 'price') copy.sort((a, b) => b.price - a.price);
+    else copy.sort((a, b) => (Math.abs(b.net) * 10 + b.signal_count) - (Math.abs(a.net) * 10 + a.signal_count));
+    return copy;
+  }
+
+  function render() {
+    let filtered = DATA.filter(c => {
+      const tierOk = state.tier === 'all' || tierGroup(c.tier_class) === state.tier;
+      const themeOk = state.theme === 'all' || c.theme === state.theme;
+      return tierOk && themeOk;
+    });
+    filtered = sortData(filtered);
+    const grid = document.getElementById('grid');
+    grid.innerHTML = filtered.length
+      ? filtered.map(cardHtml).join('')
+      : '<div class="empty">No tickers match this filter.</div>';
+  }
+
+  document.getElementById('tierFilters').addEventListener('click', e => {
+    const btn = e.target.closest('.filter-btn');
+    if (!btn) return;
+    document.querySelectorAll('#tierFilters .filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    state.tier = btn.dataset.tier;
+    render();
+  });
+  themeSel.addEventListener('change', e => { state.theme = e.target.value; render(); });
+  document.getElementById('sortBy').addEventListener('change', e => { state.sort = e.target.value; render(); });
+
+  render();
+</script>
+</body></html>
